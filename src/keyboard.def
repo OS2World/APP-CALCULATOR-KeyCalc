@@ -1,0 +1,23 @@
+DEFINITION MODULE Keyboard;
+
+        (****************************************************************)
+        (*                                                              *)
+        (*      Keyboard status routines for the calculator program     *)
+        (*                                                              *)
+        (*  Programmer:         P. Moylan                               *)
+        (*  Last edited:        5 March 2002                            *)
+        (*  Status:             Working                                 *)
+        (*                                                              *)
+        (****************************************************************)
+
+
+PROCEDURE SetNumLock (set: BOOLEAN);
+
+    (* Set/clear the num lock condition.   *)
+
+PROCEDURE NumLockStatus (): BOOLEAN;
+
+    (* Returns the current state of the num lock condition.  *)
+
+END Keyboard.
+

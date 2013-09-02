@@ -1,0 +1,166 @@
+DEFINITION MODULE OurMath;
+
+    (********************************************************)
+    (*                                                      *)
+    (*           Mathematical functions for the             *)
+    (*           types LONGREAL and LONGCOMPLEX             *)
+    (*                                                      *)
+    (*     Author:         Peter Moylan                     *)
+    (*     Started:        16 February 2002                 *)
+    (*     Last edited:    12 March 2002                    *)
+    (*     Status:         OK                               *)
+    (*                                                      *)
+    (********************************************************)
+
+
+VAR PI: LONGREAL;
+
+(****************************************************************)
+(*                REAL TO INTEGER CONVERSIONS                   *)
+(****************************************************************)
+
+PROCEDURE ITRUNC (val: LONGREAL): INTEGER;
+
+    (* Truncate to signed integer part, with the result         *)
+    (* saturating in the case of integer overflow.              *)
+
+PROCEDURE Round (val: LONGREAL): INTEGER;
+
+    (* Same as ITRUNC, except that we round rather than truncate. *)
+
+PROCEDURE URound (val: LONGREAL): CARDINAL;
+
+    (* Same as Round, but with an unsigned result. *)
+
+PROCEDURE reTrunc (val: LONGREAL): LONGREAL;
+PROCEDURE cxTrunc (val: LONGCOMPLEX): LONGCOMPLEX;
+PROCEDURE reRound (val: LONGREAL): LONGREAL;
+PROCEDURE cxRound (val: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Like ITRUNC and Round, except for the result type. *)
+
+PROCEDURE Negative (x: LONGREAL): LONGREAL;
+PROCEDURE cxNegative (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Unary minus. *)
+
+PROCEDURE BoolNOT (x: LONGREAL): LONGREAL;
+PROCEDURE cxBoolNOT (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Boolean NOT of integer part. *)
+
+(****************************************************************)
+(*                   POWERS/EXPONENTIATION                      *)
+(****************************************************************)
+
+PROCEDURE atoi (a: LONGREAL;  i: CARDINAL): LONGREAL;
+
+    (* Calculates a**i, for unsigned integer i. *)
+
+PROCEDURE power (x, y: LONGREAL): LONGREAL;
+PROCEDURE cxpower (x, y: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* x to the power y *)
+
+PROCEDURE sqrt (x: LONGREAL): LONGREAL;
+PROCEDURE cxsqrt (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Square root. *)
+
+PROCEDURE exp (x: LONGREAL): LONGREAL;
+PROCEDURE cxexp (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Exponential. *)
+
+PROCEDURE ln (x: LONGREAL): LONGREAL;
+PROCEDURE cxln (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Natural logarithm. *)
+
+PROCEDURE log10 (x: LONGREAL): LONGREAL;
+PROCEDURE cxlog10 (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Logarithm, base 10. *)
+
+(****************************************************************)
+(*                  TRIGONOMETRIC FUNCTIONS                     *)
+(****************************************************************)
+
+PROCEDURE sin (x: LONGREAL): LONGREAL;
+PROCEDURE cxsin (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Sine. *)
+
+PROCEDURE cos (x: LONGREAL): LONGREAL;
+PROCEDURE cxcos (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Cosine. *)
+
+PROCEDURE tan (x: LONGREAL): LONGREAL;
+PROCEDURE cxtan (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Tangent. *)
+
+PROCEDURE arcsin (x: LONGREAL): LONGREAL;
+PROCEDURE cxarcsin (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Inverse sine. *)
+
+PROCEDURE arccos (x: LONGREAL): LONGREAL;
+PROCEDURE cxarccos (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Inverse cosine. *)
+
+PROCEDURE arctan (x: LONGREAL): LONGREAL;
+PROCEDURE cxarctan (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Inverse tangent. *)
+
+PROCEDURE sinh (x: LONGREAL): LONGREAL;
+PROCEDURE cxsinh (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Returns the hyperbolic sine of x *)
+
+PROCEDURE cosh (x: LONGREAL): LONGREAL;
+PROCEDURE cxcosh (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Returns the hyperbolic cosine of x *)
+
+PROCEDURE tanh (x: LONGREAL): LONGREAL;
+PROCEDURE cxtanh (x: LONGCOMPLEX): LONGCOMPLEX;
+
+    (* Returns the hyperbolic tangent of x *)
+
+(****************************************************************)
+(*                   TWO-VARIABLE FUNCTIONS                     *)
+(****************************************************************)
+
+PROCEDURE rexor (VAR (*INOUT*) y: LONGREAL;  VAR (*IN*) x: LONGREAL);
+PROCEDURE cxxor (VAR (*INOUT*) y: LONGCOMPLEX;
+                        VAR (*IN*) x: LONGCOMPLEX);
+
+    (* Exclusive OR of integer part.  The result is left in y,  *)
+    (* and x is unchanged.                                      *)
+
+PROCEDURE cxDummy (VAR y, x: LONGCOMPLEX);
+
+    (* A do-nothing function. *)
+
+(****************************************************************)
+(*                  RECTANGULAR TO/FROM POLAR                   *)
+(****************************************************************)
+
+PROCEDURE RectToPolar (VAR (*INOUT*) number1, number2: LONGREAL);
+
+    (* On entry, number1 and number2 are the real and imaginary *)
+    (* parts, respectively, of a complex number.  On exit they  *)
+    (* are the magnitude and phase.                             *)
+
+PROCEDURE PolarToRect (VAR (*INOUT*) number1, number2: LONGREAL);
+
+    (* On entry, number1 and number2 are the magnitude and      *)
+    (* phase, respectively, of a complex number.  On exit they  *)
+    (* are the real and imaginary parts.                        *)
+
+END OurMath.
+

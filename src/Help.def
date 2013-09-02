@@ -1,0 +1,19 @@
+DEFINITION MODULE Help;
+
+        (************************************************************)
+        (*                                                          *)
+        (*                      PM Calculator                       *)
+        (*                     The help window                      *)
+        (*                                                          *)
+        (*    Started:        26 February 2002                      *)
+        (*    Last edited:    26 February 2002                      *)
+        (*    Status:         OK                                    *)
+        (*                                                          *)
+        (************************************************************)
+
+PROCEDURE Open;
+
+    (* Displays the help window. *)
+
+END Help.
+

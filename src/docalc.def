@@ -1,0 +1,35 @@
+DEFINITION MODULE DoCalc;
+
+        (************************************************************)
+        (*                                                          *)
+        (*                      PM Calculator                       *)
+        (*          The module that does the calculations           *)
+        (*                                                          *)
+        (*    Started:        12 February 2002                      *)
+        (*    Last edited:    12 March 2002                         *)
+        (*    Status:         OK                                    *)
+        (*                                                          *)
+        (************************************************************)
+
+
+IMPORT OS2;
+
+CONST
+    FunctionSym = 'v';
+    Function2Sym = 'w';
+    WM_FINISHED = OS2.WM_USER + 1;
+
+PROCEDURE Start (hwnd: OS2.HWND);
+
+    (* Starts the calculator task running. *)
+
+PROCEDURE NewChar (ch: CHAR);
+
+    (* Sends ch as input to the calculator. *)
+
+PROCEDURE ToggleStatusWindow (k: CARDINAL);
+
+    (* Rolls the status k up to the next possibility. *)
+
+END DoCalc.
+

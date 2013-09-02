@@ -1,0 +1,37 @@
+DEFINITION MODULE Drag;
+
+      (************************************************************)
+      (*                                                          *)
+      (*                      PM Calculator                       *)
+      (*                                                          *)
+      (*    Module to deal with strings that are dropped          *)
+      (*    onto the calculator by DragText.  This is based on    *)
+      (*    sample code supplied by Rich Walsh (thanks, Rich!),   *)
+      (*    the author of DragText.                               *)
+      (*                                                          *)
+      (*    Started:        15 March 2002                         *)
+      (*    Last edited:    15 March 2002                         *)
+      (*    Status:         OK                                    *)
+      (*                                                          *)
+      (************************************************************)
+
+
+IMPORT OS2;
+
+PROCEDURE DragOver (hwnd: OS2.HWND;  pdinfo: OS2.PDRAGINFO): OS2.MRESULT;
+
+    (* Called when we see a DM_DRAGOVER window message. We are  *)
+    (* supposed to say whether we can accept the data.          *)
+
+PROCEDURE ReceiveDroppedData (hwnd: OS2.HWND;  pdinfo: OS2.PDRAGINFO);
+
+    (* Respond to a DM_DROP message by picking up, if possible, the     *)
+    (* dropped string and using it.                                     *)
+
+PROCEDURE DrawTargetEmphasis (hwnd: OS2.HWND;  Draw: BOOLEAN);
+
+    (* Draws the target emphasis, or undraws it if the second parameter *)
+    (* is FALSE.                                                        *)
+
+END Drag.
+

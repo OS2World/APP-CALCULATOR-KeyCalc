@@ -1,0 +1,86 @@
+DEFINITION MODULE Display;
+
+        (************************************************************)
+        (*                                                          *)
+        (*                      PM Calculator                       *)
+        (*                Screen display operations                 *)
+        (*                                                          *)
+        (*    Started:        14 February 2002                      *)
+        (*    Last edited:    13 March 2002                         *)
+        (*    Status:         OK                                    *)
+        (*                                                          *)
+        (************************************************************)
+
+
+IMPORT OS2;
+
+CONST
+    MaxVisibleRegisterNumber = 4;
+    MaxVisibleMemoryNumber = 3;
+    DigitsPerNumber = 10;
+
+TYPE
+    RegisterNumber = [0..MaxVisibleRegisterNumber];
+    VisibleMemoryNumber = [0..MaxVisibleMemoryNumber];
+
+PROCEDURE Message (mess: ARRAY OF CHAR);
+
+    (* Debugging message. *)
+
+PROCEDURE SetupWindows (hwnd: OS2.HWND);
+
+    (* Initialisation operation: works out which windows should receive *)
+    (* the output for the various dialogue controls.                    *)
+
+PROCEDURE AdjustScreenLayout;
+
+    (* Works out the screen layout for the current font, and sets all   *)
+    (* the window sizes.                                                *)
+
+PROCEDURE CheckFontChange;
+
+    (* Check whether any fonts have changed, and if so take appropriate *)
+    (* action.                                                          *)
+
+PROCEDURE SetMenuPresParams (MenuWindow: OS2.HWND);
+
+    (* Sets the menu font and colours from values stored in the INI file. *)
+
+PROCEDURE SaveMenuPresParams (MenuWindow: OS2.HWND);
+
+    (* Takes a copy of the menu font and colours. *)
+
+PROCEDURE SaveState;
+
+    (* Save fonts and colours in the INI file. *)
+
+PROCEDURE SetBase (base: CARDINAL);
+
+    (* Sets the base for numeric entry and display. *)
+
+PROCEDURE SetRPN (RPN: BOOLEAN);
+
+    (* Algebraic mode for FALSE, RPN mode for TRUE. *)
+
+PROCEDURE SetComplex (Cmplx: BOOLEAN);
+
+    (* Real arithmetic for FALSE, complex arithmetic for TRUE. *)
+
+PROCEDURE SetDegrees (deg: BOOLEAN);
+
+    (* Angles are measured in degrees iff deg = TRUE. *)
+
+PROCEDURE WriteRegister (N: RegisterNumber;  text: ARRAY OF CHAR);
+
+    (* Writes to calculator register N. *)
+
+PROCEDURE WriteOperator (N: RegisterNumber;  text: ARRAY OF CHAR);
+
+    (* Writes to operator register N. *)
+
+PROCEDURE WriteMemory (N: VisibleMemoryNumber;  text: ARRAY OF CHAR);
+
+    (* Writes to memory register N. *)
+
+END Display.
+
