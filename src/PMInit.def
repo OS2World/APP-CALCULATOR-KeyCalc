@@ -5,7 +5,7 @@ DEFINITION MODULE PMInit;
         (*        Initialisation code for a PM application              *)
         (*                                                              *)
         (*        Started:        17 January 2002                       *)
-        (*        Last edited:    17 January 2002                       *)
+        (*        Last edited:    11 June 2002                          *)
         (*        Status:         OK                                    *)
         (*                                                              *)
         (****************************************************************)
@@ -24,6 +24,10 @@ PROCEDURE [OS2.APIENTRY] MessageBox(hwndOwner : OS2.HWND
                                    ): OS2.ULONG;
 
     (* Puts up a standard message box. *)
+
+PROCEDURE WarningBox (owner: OS2.HWND;  text: ARRAY OF CHAR);
+
+    (* Pops up a warning message, with beep. *)
 
 END PMInit.
 

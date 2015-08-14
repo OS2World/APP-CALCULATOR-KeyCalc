@@ -1,0 +1,20 @@
+DEFINITION MODULE MainFrame;
+
+        (************************************************************)
+        (*                                                          *)
+        (*                      PM Calculator                       *)
+        (*                  The main frame window                   *)
+        (*                                                          *)
+        (*    Started:        12 February 2002                      *)
+        (*    Last edited:    12 February 2002                      *)
+        (*    Status:         OK                                    *)
+        (*                                                          *)
+        (************************************************************)
+
+
+PROCEDURE OpenMainFrame;
+
+    (* Creates the main dialogue box. *)
+
+END MainFrame.
+

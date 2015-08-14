@@ -5,7 +5,7 @@ MODULE KeyCalc;
         (*                      PM Calculator                       *)
         (*                                                          *)
         (*    Started:        12 February 2002                      *)
-        (*    Last edited:    12 February 2002                      *)
+        (*    Last edited:    3 March 2009                          *)
         (*    Status:         OK                                    *)
         (*                                                          *)
         (************************************************************)
@@ -30,8 +30,8 @@ BEGIN
 
     (* NOTE:  clean up from here is handled by the DosExitList processing *)
     (* Since signal exceptions are not handled by RTS yet, using module   *)
-    (* finalization for clean up is incorrect. This will be changed in the*)
-    (* next release.                                                      *)
+    (* finalization for clean up is incorrect. This was going to be       *)
+    (* changed in the next release of XDS.                                *)
 
     MainFrame.OpenMainFrame;
 

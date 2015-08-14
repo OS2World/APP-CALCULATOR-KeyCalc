@@ -6,7 +6,7 @@ DEFINITION MODULE Display;
         (*                Screen display operations                 *)
         (*                                                          *)
         (*    Started:        14 February 2002                      *)
-        (*    Last edited:    13 March 2002                         *)
+        (*    Last edited:    3 March 2009                          *)
         (*    Status:         OK                                    *)
         (*                                                          *)
         (************************************************************)

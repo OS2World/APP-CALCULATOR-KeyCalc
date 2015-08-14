@@ -6,7 +6,7 @@ IMPLEMENTATION MODULE DoCalc;
         (*          The module that does the calculations           *)
         (*                                                          *)
         (*    Started:        12 February 2002                      *)
-        (*    Last edited:    12 March 2002                         *)
+        (*    Last edited:    12 August 2015                        *)
         (*    Status:         Working                               *)
         (*                                                          *)
         (************************************************************)
@@ -15,6 +15,8 @@ IMPLEMENTATION MODULE DoCalc;
 FROM Display IMPORT Message;       (* for debugging *)
 
 IMPORT OS2, OS2RTL, DID, Display, Strings;
+
+FROM SYSTEM IMPORT LOC;
 
 FROM OurMath IMPORT
     (* const*)  PI,
@@ -31,7 +33,7 @@ FROM NumberToString IMPORT
     (* proc *)  LongRealToString, LongComplexToString;
 
 FROM LowLevel IMPORT
-    (* proc *)  IAND, IOR;
+    (* proc *)  IAND, IOR, EVAL;
 
 FROM CircularBuffers IMPORT
     (* type *)  CircularBuffer,
@@ -41,6 +43,7 @@ FROM TaskControl IMPORT
     (* proc *)  CreateTask;
 
 FROM INIData IMPORT
+    (* type *)  HINI,
     (* proc *)  OpenINIFile, CloseINIFile, INIGet, INIPut;
 
 (************************************************************************)
@@ -1728,20 +1731,35 @@ PROCEDURE SaveINIData;
 
     (* Saves part of the calculator state to the INI file. *)
 
-    VAR hini: OS2.HINI;  j: CARDINAL;
+    VAR hini: HINI;
+
+    (********************************************************************)
+
+    PROCEDURE Put (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF LOC);
+
+        BEGIN
+            INIPut (hini, app, key, value);
+        END Put;
+
+    (********************************************************************)
+
+    VAR j: CARDINAL;
         code: ARRAY [0..1] OF CHAR;
+        name: ARRAY [0..255] OF CHAR;
 
     BEGIN
         code[1] := Nul;
-        hini := OpenINIFile(INIFileName);
-        INIPut (hini, "Options", "Base", NumberBase);
-        INIPut (hini, "Options", "RPN", RPNmode);
-        INIPut (hini, "Options", "Complex", CxField);
-        INIPut (hini, "Options", "Degrees", AnglesInDegrees);
-        INIPut (hini, "Options", "Beep", BlipEnabled);
+        name := INIFileName;
+        hini := OpenINIFile(name, FALSE);
+        Put ("Options", "Base", NumberBase);
+        Put ("Options", "RPN", RPNmode);
+        Put ("Options", "Complex", CxField);
+        Put ("Options", "Degrees", AnglesInDegrees);
+        Put ("Options", "Beep", BlipEnabled);
         FOR j := 0 TO MaxMemoryNumber DO
             code[0] := CHR(ORD('0')+j);
-            INIPut (hini, "Memory", code, MemoryValue[j]);
+            Put ("Memory", code, MemoryValue[j]);
         END (*FOR*);
         CloseINIFile (hini);
     END SaveINIData;
@@ -1792,7 +1810,7 @@ PROCEDURE Start (hwnd: OS2.HWND);
 
     BEGIN
         MainHwnd := hwnd;
-        CreateTask (CalcTask, 15, "KeyCalc");
+        EVAL (CreateTask (CalcTask, 15, "KeyCalc"));
     END Start;
 
 (************************************************************************)
@@ -1827,33 +1845,48 @@ PROCEDURE LoadINIData;
 
     (* Loads stored information from the INI file. *)
 
-    VAR hini: OS2.HINI;  j: CARDINAL;
+    VAR hini: HINI;
+
+    (********************************************************************)
+
+    PROCEDURE Get (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF LOC): BOOLEAN;
+
+        BEGIN
+            RETURN INIGet (hini, app, key, value);
+        END Get;
+
+    (********************************************************************)
+
+    VAR j: CARDINAL;
         code: ARRAY [0..1] OF CHAR;
+        name: ARRAY [0..255] OF CHAR;
 
     BEGIN
         code[1] := Nul;
-        hini := OpenINIFile(INIFileName);
-        IF NOT INIGet (hini, "Options", "Base", NumberBase) THEN
+        name := INIFileName;
+        hini := OpenINIFile(name, FALSE);
+        IF NOT Get ("Options", "Base", NumberBase) THEN
             NumberBase := 10;
         END (*IF*);
-        IF NOT INIGet (hini, "Options", "RPN", RPNmode) THEN
+        IF NOT Get ("Options", "RPN", RPNmode) THEN
             RPNmode := FALSE;
         END (*IF*);
-        IF NOT INIGet (hini, "Options", "Complex", CxField) THEN
+        IF NOT Get ("Options", "Complex", CxField) THEN
             CxField := FALSE;
         END (*IF*);
-        IF NOT INIGet (hini, "Options", "Degrees", AnglesInDegrees) THEN
+        IF NOT Get ("Options", "Degrees", AnglesInDegrees) THEN
             AnglesInDegrees := FALSE;
         END (*IF*);
-        IF NOT INIGet (hini, "Options", "Beep", BlipEnabled) THEN
+        IF NOT Get ("Options", "Beep", BlipEnabled) THEN
             BlipEnabled := TRUE;
         END (*IF*);
         FOR j := 0 TO MaxMemoryNumber DO
             code[0] := CHR(ORD('0')+j);
-            IF NOT INIGet (hini, "Memory", code, MemoryValue[j].val) THEN
+            IF NOT Get ("Memory", code, MemoryValue[j].val) THEN
                 MemoryValue[j].val := CMPLX (0.0, 0.0);
             END (*IF*);
-            IF NOT INIGet (hini, "MemoryPolar", code, MemoryValue[j].polar) THEN
+            IF NOT Get ("MemoryPolar", code, MemoryValue[j].polar) THEN
                 MemoryValue[j].polar := FALSE;
             END (*IF*);
         END (*FOR*);

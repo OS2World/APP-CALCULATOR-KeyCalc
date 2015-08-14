@@ -1,6 +1,6 @@
 (**************************************************************************)
 (*                                                                        *)
-(*  PMOS/2 software library                                               *)
+(*  Support modules for network applications                              *)
 (*  Copyright (C) 2014   Peter Moylan                                     *)
 (*                                                                        *)
 (*  This program is free software: you can redistribute it and/or modify  *)
@@ -20,19 +20,18 @@
 (*                                                                        *)
 (**************************************************************************)
 
-IMPLEMENTATION MODULE Types;
+IMPLEMENTATION MODULE Names;
 
         (********************************************************)
         (*                                                      *)
-        (*      Definitions of non-quite-portable types         *)
+        (*        Definitions of a few basic data types         *)
         (*                                                      *)
         (*  Programmer:         P. Moylan                       *)
-        (*  Last edited:        21 February 1995                *)
+        (*  Started:            9 May 1998                      *)
+        (*  Last edited:        9 May 1998                      *)
         (*  Status:             OK                              *)
-        (*                                                      *)
-        (*      The implementation part is deliberately empty   *)
         (*                                                      *)
         (********************************************************)
 
-END Types.
+END Names.
 

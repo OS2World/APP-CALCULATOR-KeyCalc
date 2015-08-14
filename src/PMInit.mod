@@ -1,3 +1,25 @@
+(**************************************************************************)
+(*                                                                        *)
+(*  Support modules for network applications                              *)
+(*  Copyright (C) 2014   Peter Moylan                                     *)
+(*                                                                        *)
+(*  This program is free software: you can redistribute it and/or modify  *)
+(*  it under the terms of the GNU General Public License as published by  *)
+(*  the Free Software Foundation, either version 3 of the License, or     *)
+(*  (at your option) any later version.                                   *)
+(*                                                                        *)
+(*  This program is distributed in the hope that it will be useful,       *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU General Public License for more details.                          *)
+(*                                                                        *)
+(*  You should have received a copy of the GNU General Public License     *)
+(*  along with this program.  If not, see <http://www.gnu.org/licenses/>. *)
+(*                                                                        *)
+(*  To contact author:   http://www.pmoylan.org   peter@pmoylan.org       *)
+(*                                                                        *)
+(**************************************************************************)
+
 IMPLEMENTATION MODULE PMInit;
 
         (****************************************************************)
@@ -47,9 +69,21 @@ PROCEDURE [OS2.APIENTRY] MessageBox(hwndOwner : OS2.HWND
                                   NIL, 0, fsStyle);
     END MessageBox;
 
-(********************************************************************************)
-(*                                FINALISATION                                  *)
-(********************************************************************************)
+(**************************************************************************)
+
+PROCEDURE WarningBox (owner: OS2.HWND;  text: ARRAY OF CHAR);
+
+    (* Pops up a warning message, with beep. *)
+
+    BEGIN
+        OS2.WinAlarm(OS2.HWND_DESKTOP, OS2.WA_ERROR);
+        OS2.WinMessageBox (OS2.HWND_DESKTOP, owner, text,
+                                  "Warning", 0, OS2.MB_INFORMATION);
+    END WarningBox;
+
+(**************************************************************************)
+(*                             FINALISATION                               *)
+(**************************************************************************)
 
 PROCEDURE ["SysCall"] ExitProc (ulTermCode : OS2.ULONG);
 

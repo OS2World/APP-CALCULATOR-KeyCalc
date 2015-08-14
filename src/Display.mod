@@ -6,7 +6,7 @@ IMPLEMENTATION MODULE Display;
         (*                Screen display operations                 *)
         (*                                                          *)
         (*    Started:        14 February 2002                      *)
-        (*    Last edited:    13 March 2002                         *)
+        (*    Last edited:    12 August 2015                        *)
         (*    Status:         OK                                    *)
         (*                                                          *)
         (************************************************************)
@@ -15,9 +15,11 @@ IMPLEMENTATION MODULE Display;
 IMPORT OS2, DID, PMInit, Strings, Keyboard;
 
 FROM SYSTEM IMPORT
+    (* type *)  LOC,
     (* proc *)  ADR;
 
 FROM INIData IMPORT
+    (* type *)  HINI,
     (* proc *)  SetInitialWindowPosition, StoreWindowPosition,
                 OpenINIFile, INIGet, INIPut, INIGetString, INIPutString,
                 CloseINIFile;
@@ -781,63 +783,86 @@ PROCEDURE LoadFontsAndColours;
 
     (* Loads fonts and colours from the INI file. *)
 
-    VAR hini: OS2.HINI;
+    VAR hini: HINI;
+
+    (********************************************************************)
+
+    PROCEDURE Get (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF LOC): BOOLEAN;
+
+        BEGIN
+            RETURN INIGet (hini, app, key, value);
+        END Get;
+
+    (********************************************************************)
+
+    PROCEDURE GetString (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF CHAR): BOOLEAN;
+
+        BEGIN
+            RETURN INIGetString (hini, app, key, value);
+        END GetString;
+
+    (********************************************************************)
+
+    VAR name: ARRAY [0..255] OF CHAR;
 
     BEGIN
-        hini := OpenINIFile(INIFileName);
+        name := INIFileName;
+        hini := OpenINIFile(name, FALSE);
 
-        IF NOT INIGetString (hini, "Font", "Status", StatusFontName) THEN
+        IF NOT GetString ("Font", "Status", StatusFontName) THEN
             StatusFontName := DefaultStatusFontName;
         END (*IF*);
-        IF NOT INIGetString (hini, "Font", "Memory", MemoryFontName) THEN
+        IF NOT GetString ("Font", "Memory", MemoryFontName) THEN
             MemoryFontName := DefaultMemoryFontName;
         END (*IF*);
-        IF NOT INIGetString (hini, "Font", "Acc", AccFontName) THEN
+        IF NOT GetString ("Font", "Acc", AccFontName) THEN
             AccFontName := DefaultAccFontName;
         END (*IF*);
-        IF NOT INIGetString (hini, "Font", "Stack", StackFontName) THEN
+        IF NOT GetString ("Font", "Stack", StackFontName) THEN
             StackFontName := DefaultStackFontName;
         END (*IF*);
-        IF NOT INIGetString (hini, "Font", "Menu", MenuFontName) THEN
+        IF NOT GetString ("Font", "Menu", MenuFontName) THEN
             StackFontName := DefaultMenuFontName;
         END (*IF*);
 
-        IF NOT INIGet (hini, "BackColour", "Frame", GeneralBackground) THEN
+        IF NOT Get ("BackColour", "Frame", GeneralBackground) THEN
             GeneralBackground := DefaultFrameColour;
         END (*IF*);
-        IF NOT INIGet (hini, "BackColour", "Status", StatusBackColour) THEN
+        IF NOT Get ("BackColour", "Status", StatusBackColour) THEN
             StatusBackColour := DefaultStatusBackColour;
         END (*IF*);
-        IF NOT INIGet (hini, "BackColour", "Memory", MemoryBackColour) THEN
+        IF NOT Get ("BackColour", "Memory", MemoryBackColour) THEN
             MemoryBackColour := DefaultMemoryBackColour;
         END (*IF*);
-        IF NOT INIGet (hini, "BackColour", "Acc", AccBackColour) THEN
+        IF NOT Get ("BackColour", "Acc", AccBackColour) THEN
             AccBackColour := DefaultAccBackColour;
         END (*IF*);
-        IF NOT INIGet (hini, "BackColour", "Stack", StackBackColour) THEN
+        IF NOT Get ("BackColour", "Stack", StackBackColour) THEN
             StackBackColour := DefaultStackBackColour;
         END (*IF*);
-        IF NOT INIGet (hini, "BackColour", "Menu", MenuBackColour) THEN
+        IF NOT Get ("BackColour", "Menu", MenuBackColour) THEN
             MenuBackColour := DefaultMenuBackColour;
         END (*IF*);
 
-        IF NOT INIGet (hini, "ForeColour", "Status", StatusForeColour) THEN
+        IF NOT Get ("ForeColour", "Status", StatusForeColour) THEN
             StatusForeColour := DefaultStatusForeColour;
         END (*IF*);
-        IF NOT INIGet (hini, "ForeColour", "Memory", MemoryForeColour) THEN
+        IF NOT Get ("ForeColour", "Memory", MemoryForeColour) THEN
             MemoryForeColour := DefaultMemoryForeColour;
         END (*IF*);
-        IF NOT INIGet (hini, "ForeColour", "Acc", AccForeColour) THEN
+        IF NOT Get ("ForeColour", "Acc", AccForeColour) THEN
             AccForeColour := DefaultAccForeColour;
         END (*IF*);
-        IF NOT INIGet (hini, "ForeColour", "Stack", StackForeColour) THEN
+        IF NOT Get ("ForeColour", "Stack", StackForeColour) THEN
             StackForeColour := DefaultStackForeColour;
         END (*IF*);
-        IF NOT INIGet (hini, "ForeColour", "Menu", MenuForeColour) THEN
+        IF NOT Get ("ForeColour", "Menu", MenuForeColour) THEN
             MenuForeColour := DefaultMenuForeColour;
         END (*IF*);
 
-        IF NOT INIGet (hini, "Options", "NumLock", NumLockWanted) THEN
+        IF NOT Get ("Options", "NumLock", NumLockWanted) THEN
             NumLockWanted := TRUE;
         END (*IF*);
 
@@ -880,7 +905,7 @@ PROCEDURE SetupWindows (hwnd: OS2.HWND);
         Status[2] := OS2.WinWindowFromID (hwnd, DID.CxField);
         Status[3] := OS2.WinWindowFromID (hwnd, DID.Degrees);
 
-        SetInitialWindowPosition (hwnd, INIFileName, "MainFrame");
+        SetInitialWindowPosition (hwnd, INIFileName, "MainFrame", FALSE);
         LoadFontsAndColours;
         SetFonts;
         SetColours;
@@ -899,37 +924,60 @@ PROCEDURE SaveState;
 
     (* Save fonts and colours in the INI file. *)
 
-    VAR hini: OS2.HINI;
+    VAR hini: HINI;
+
+    (********************************************************************)
+
+    PROCEDURE Put (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF LOC);
+
+        BEGIN
+            INIPut (hini, app, key, value);
+        END Put;
+
+    (********************************************************************)
+
+    PROCEDURE PutString (app, key: ARRAY OF CHAR;
+                         VAR (*OUT*) value: ARRAY OF CHAR);
+
+        BEGIN
+            INIPutString (hini, app, key, value);
+        END PutString;
+
+    (********************************************************************)
+
+    VAR name: ARRAY [0..255] OF CHAR;
 
     BEGIN
 
         NumLockWanted := Keyboard.NumLockStatus();
         Keyboard.SetNumLock (OldNumLock);
 
-        hini := OpenINIFile(INIFileName);
+        name := INIFileName;
+        hini := OpenINIFile(name, FALSE);
 
-        INIPut (hini, "Options", "NumLock", NumLockWanted);
-        INIPutString (hini, "Font", "Status", StatusFontName);
-        INIPutString (hini, "Font", "Memory", MemoryFontName);
-        INIPutString (hini, "Font", "Acc", AccFontName);
-        INIPutString (hini, "Font", "Stack", StackFontName);
-        INIPutString (hini, "Font", "Menu", MenuFontName);
+        Put ("Options", "NumLock", NumLockWanted);
+        PutString ("Font", "Status", StatusFontName);
+        PutString ("Font", "Memory", MemoryFontName);
+        PutString ("Font", "Acc", AccFontName);
+        PutString ("Font", "Stack", StackFontName);
+        PutString ("Font", "Menu", MenuFontName);
 
-        INIPut (hini, "BackColour", "Frame", GeneralBackground);
-        INIPut (hini, "BackColour", "Status", StatusBackColour);
-        INIPut (hini, "BackColour", "Memory", MemoryBackColour);
-        INIPut (hini, "BackColour", "Acc", AccBackColour);
-        INIPut (hini, "BackColour", "Stack", StackBackColour);
-        INIPut (hini, "BackColour", "Menu", MenuBackColour);
+        Put ("BackColour", "Frame", GeneralBackground);
+        Put ("BackColour", "Status", StatusBackColour);
+        Put ("BackColour", "Memory", MemoryBackColour);
+        Put ("BackColour", "Acc", AccBackColour);
+        Put ("BackColour", "Stack", StackBackColour);
+        Put ("BackColour", "Menu", MenuBackColour);
 
-        INIPut (hini, "ForeColour", "Status", StatusForeColour);
-        INIPut (hini, "ForeColour", "Memory", MemoryForeColour);
-        INIPut (hini, "ForeColour", "Acc", AccForeColour);
-        INIPut (hini, "ForeColour", "Stack", StackForeColour);
-        INIPut (hini, "ForeColour", "Menu", MenuForeColour);
+        Put ("ForeColour", "Status", StatusForeColour);
+        Put ("ForeColour", "Memory", MemoryForeColour);
+        Put ("ForeColour", "Acc", AccForeColour);
+        Put ("ForeColour", "Stack", StackForeColour);
+        Put ("ForeColour", "Menu", MenuForeColour);
 
         CloseINIFile (hini);
-        StoreWindowPosition (frame, INIFileName, "MainFrame");
+        StoreWindowPosition (frame, INIFileName, "MainFrame", FALSE);
 
     END SaveState;
 
